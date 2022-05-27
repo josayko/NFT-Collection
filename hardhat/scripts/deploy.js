@@ -12,6 +12,7 @@ async function main() {
     metadataURL,
     whitelistContract
   )
+  await deployedCryptoDevsContract.deployed()
 
   console.log(
     'Crypto Devs Contract Address: ',
