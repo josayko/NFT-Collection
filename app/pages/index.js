@@ -1,8 +1,32 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useNetwork, useConnect } from 'wagmi';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  // wagmi hooks
+  const { activeChain } = useNetwork();
+
+  // keep track whether wallet is connected or not
+  const { isConnected } = useConnect();
+
+  const connectWallet = () => {
+    if (isConnected) {
+      if (activeChain && activeChain.network === 'goerli') {
+        console.log('OK connected to Goerli');
+      } else {
+        console.log('Wrong Network');
+      }
+    } else {
+      console.log('Not Connected');
+    }
+  };
+
+  useEffect(() => {
+    connectWallet();
+  }, [activeChain, isConnected]);
+
   return (
     <div>
       <Head>
@@ -29,5 +53,5 @@ export default function Home() {
       </div>
       <footer className={styles.footer}>Made with &#10084; by josayko</footer>
     </div>
-  )
+  );
 }
