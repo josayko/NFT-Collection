@@ -40,15 +40,16 @@
 }
 
 .button {
-  border-radius: 4px;
-  background-color: blue;
+  border-radius: 15px;
+  background-color: #0e76fd;
   border: none;
   color: #ffffff;
   font-size: 15px;
-  padding: 20px;
-  width: 200px;
+  font-weight: bold;
+  padding: 10px;
+  width: 175px;
   cursor: pointer;
-  margin-bottom: 2%;
+  margin: 2% 0px;
 }
 @media (max-width: 1000px) {
   .main {
