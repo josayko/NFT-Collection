@@ -13,9 +13,6 @@ import { useEffect, useState } from 'react';
 import { NFT_CONTRACT_ADDRESS, abi } from '../constants';
 
 export default function Home() {
-  const { activeChain } = useNetwork();
-  // keep track whether wallet is connected or not
-  const { isConnected } = useConnect();
   // keep track of the number of tokenIds that have been minted
   const [tokenIdsMinted, setTokenIdsMinted] = useState('0');
   const [loading, setLoading] = useState(false);
@@ -23,9 +20,14 @@ export default function Home() {
   const [presaleEnded, setPresaleEnded] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
 
+  // keep track of connected chain
+  const { activeChain } = useNetwork();
+  // keep track whether wallet is connected or not
+  const { isConnected } = useConnect();
+  // connected account
+  const { data: account } = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();
-  const { data: account } = useAccount();
 
   // Contract instance for signing transactions
   const signerContract = useContract({
@@ -42,31 +44,14 @@ export default function Home() {
   });
 
   /**
-   * getOwner: calls the contract to retrieve the owner
-   */
-  const getOwner = async () => {
-    try {
-      // call the owner function from the contract
-      const _owner = await providerContract.owner();
-      if (account.address.toLowerCase() === _owner.toLowerCase()) {
-        setIsOwner(true);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  /**
    * checkIfPresaleStarted: checks if the presale has started by quering the `presaleStarted`
    * variable in the contract
    */
   const checkIfPresaleStarted = async () => {
+    console.log('CHECK PRESALE STARTED');
     try {
       // Call `presaleStarted` from the contract
       const _presaleStarted = await providerContract.presaleStarted();
-      if (!_presaleStarted) {
-        await getOwner();
-      }
       setPresaleStarted(_presaleStarted);
       return _presaleStarted;
     } catch (error) {
@@ -106,6 +91,7 @@ export default function Home() {
    * getTokenIdsMinted: gets the number of tokenIds that have been minted
    */
   const getTokenIdsMinted = async () => {
+    console.log('CHECK TOKEN MINTED');
     try {
       const _tokenIds = await providerContract.tokenIds();
       // _tokenIds is a `Big Number`
@@ -139,14 +125,36 @@ export default function Home() {
       return <button className={styles.button}>Loading...</button>;
     }
 
-    if (isOwner && !presaleStarted) {
+    if (
+      isOwner &&
+      !presaleStarted &&
+      activeChain &&
+      activeChain.network === 'goerli'
+    ) {
       return <button className={styles.button}>Start Presale!</button>;
     }
   };
 
   useEffect(() => {
+    /**
+     * getOwner: calls the contract to retrieve the owner
+     */
+    const getOwner = async () => {
+      console.log('GET OWNER');
+      try {
+        // call the owner function from the contract
+        const _owner = await providerContract.owner();
+        if (account.address.toLowerCase() === _owner.toLowerCase()) {
+          setIsOwner(true);
+        } else {
+          setIsOwner(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     if (isConnected) {
-      console.log('isOwner:', isOwner);
+      getOwner();
       const _presaleStarted = checkIfPresaleStarted();
       if (_presaleStarted) {
         checkIfPresaleEnded();
@@ -165,11 +173,17 @@ export default function Home() {
       }, 5 * 1000);
 
       // set an interval to get the number of token Ids minted every 5 seconds
-      setInterval(async () => {
+      const TokenIdsMintedInterval = setInterval(async () => {
         await getTokenIdsMinted();
       }, 5 * 1000);
     }
-  }, [activeChain, isConnected]);
+
+    // clear all calls to setInterval
+    return () => {
+      clearInterval(presaleEndedInterval);
+      clearInterval(TokenIdsMintedInterval);
+    };
+  }, [activeChain, isConnected, account]);
 
   return (
     <div>
