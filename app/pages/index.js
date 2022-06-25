@@ -23,6 +23,21 @@ export default function Home() {
     }
   };
 
+  const renderInfo = () => {
+    if (isConnected) {
+      if (activeChain && activeChain.network === 'goerli') {
+        return <div className={styles.description}>/20 have been minted</div>;
+      } else {
+        return (
+          <div
+            className={
+              styles.error
+            }>{`Wrong Network ! Please switch to Goerli testnet`}</div>
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     connectWallet();
   }, [activeChain, isConnected]);
@@ -40,7 +55,7 @@ export default function Home() {
           <div className={styles.description}>
             It&apos;s an NFT collection for developers in Crypto
           </div>
-          <div className={styles.description}>/20 have been minted</div>
+          {renderInfo()}
           <ConnectButton />
         </div>
         <div>

@@ -32,6 +32,13 @@
   font-size: 1.2rem;
 }
 
+.error {
+  color: crimson;
+  line-height: 1;
+  margin: 2rem 0;
+  font-size: 1rem;
+}
+
 .button {
   border-radius: 4px;
   background-color: blue;
