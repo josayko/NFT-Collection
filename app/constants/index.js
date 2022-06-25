@@ -1,3 +1,5 @@
+export const NFT_CONTRACT_ADDRESS =
+  '0x19D9514cE27Df9EA634B68c226757DD5dE3ab0B8';
 export const abi = [
   {
     inputs: [
@@ -580,5 +582,4 @@ export const abi = [
     stateMutability: 'payable',
     type: 'receive'
   }
-]
-export const NFT_CONTRACT_ADDRESS = 'address of your NFT contract'
+];
