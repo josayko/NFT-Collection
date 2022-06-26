@@ -146,7 +146,7 @@ export default function Home() {
 
   const renderInfo = () => {
     if (isConnected) {
-      if (activeChain && activeChain.network === 'goerli') {
+      if (activeChain && activeChain.network === 'rinkeby') {
         return (
           <div className={styles.description}>
             {tokenIdsMinted}/20 have been minted
@@ -157,14 +157,14 @@ export default function Home() {
           <div
             className={
               styles.error
-            }>{`Wrong Network ! Please switch to Goerli testnet`}</div>
+            }>{`Wrong Network ! Please switch to Rinkeby testnet`}</div>
         );
       }
     }
   };
 
   const renderButton = () => {
-    if (isConnected && activeChain && activeChain.network === 'goerli') {
+    if (isConnected && activeChain && activeChain.network === 'rinkeby') {
       if (loading) {
         return <button className={styles.button}>Loading...</button>;
       }
