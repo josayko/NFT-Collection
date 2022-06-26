@@ -11,6 +11,7 @@ import {
 } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { NFT_CONTRACT_ADDRESS, abi } from '../constants';
+import { utils } from 'ethers';
 
 export default function Home() {
   // keep track of the number of tokenIds that have been minted
@@ -48,7 +49,6 @@ export default function Home() {
    * variable in the contract
    */
   const checkIfPresaleStarted = async () => {
-    console.log('CHECK PRESALE STARTED');
     try {
       // Call `presaleStarted` from the contract
       const _presaleStarted = await providerContract.presaleStarted();
@@ -91,11 +91,54 @@ export default function Home() {
    * getTokenIdsMinted: gets the number of tokenIds that have been minted
    */
   const getTokenIdsMinted = async () => {
-    console.log('CHECK TOKEN MINTED');
     try {
       const _tokenIds = await providerContract.tokenIds();
       // _tokenIds is a `Big Number`
       setTokenIdsMinted(_tokenIds.toString());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const startPresale = async () => {
+    try {
+      const tx = await signerContract.startPresale();
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      await checkIfPresaleStarted();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const presaleMint = async () => {
+    try {
+      const tx = await signerContract.presaleMint({
+        // value signifies the cost of one crypto dev which is "0.001" eth.
+        // We are parsing `0.001` string to ether using the utils library from ethers.js
+        value: utils.parseEther('0.001')
+      });
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      window.alert('You successfully minted a Crypto Dev!');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const publicMint = async () => {
+    try {
+      const tx = await signerContract.mint({
+        // value signifies the cost of one crypto dev which is "0.001" eth.
+        // We are parsing `0.001` string to ether using the utils library from ethers.js
+        value: utils.parseEther('0.001')
+      });
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      window.alert('You successfully minted a Crypto Dev!');
     } catch (error) {
       console.error(error);
     }
@@ -121,17 +164,48 @@ export default function Home() {
   };
 
   const renderButton = () => {
-    if (loading) {
-      return <button className={styles.button}>Loading...</button>;
-    }
+    if (isConnected && activeChain && activeChain.network === 'goerli') {
+      if (loading) {
+        return <button className={styles.button}>Loading...</button>;
+      }
 
-    if (
-      isOwner &&
-      !presaleStarted &&
-      activeChain &&
-      activeChain.network === 'goerli'
-    ) {
-      return <button className={styles.button}>Start Presale!</button>;
+      if (isOwner && !presaleStarted) {
+        return (
+          <button className={styles.button} onClick={startPresale}>
+            Start Presale!
+          </button>
+        );
+      }
+
+      if (!presaleStarted && !presaleEnded) {
+        return (
+          <div>
+            <p className={styles.description}>Presale hasn't started!</p>
+          </div>
+        );
+      }
+
+      if (presaleStarted && !presaleEnded) {
+        return (
+          <div>
+            <div className={styles.description}>
+              Presale has started!!! If your address is whitelisted, Mint a
+              Crypto Dev 🥳
+            </div>
+            <button className={styles.button} onClick={presaleMint}>
+              Presale Mint 🚀
+            </button>
+          </div>
+        );
+      }
+
+      if (presaleStarted && presaleEnded) {
+        return (
+          <button className={styles.button} onClick={publicMint}>
+            Public Mint 🚀
+          </button>
+        );
+      }
     }
   };
 
@@ -140,7 +214,6 @@ export default function Home() {
      * getOwner: calls the contract to retrieve the owner
      */
     const getOwner = async () => {
-      console.log('GET OWNER');
       try {
         // call the owner function from the contract
         const _owner = await providerContract.owner();
