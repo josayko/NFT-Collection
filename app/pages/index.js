@@ -271,6 +271,11 @@ export default function Home() {
           <div className={styles.description}>
             It&apos;s an NFT collection for developers in Crypto
           </div>
+          <button className={styles.button}>
+            <a href="https://testnets.opensea.io/collection/cryptodevs-n5iuj3bf4h">
+              See collection on Opensea
+            </a>
+          </button>
           {renderInfo()}
           <ConnectButton />
           {renderButton()}

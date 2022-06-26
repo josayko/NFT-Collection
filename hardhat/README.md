@@ -1,6 +1,6 @@
 # NFT Collection - Hardhat
 
-> An instance of this contract has been deployed on Ethereum Goerli testnet: https://goerli.etherscan.io/address/0xc6ca02265517cbA700966AE05c3fEFbDDb9c3919
+> An instance of this contract has been deployed on Ethereum Rinkeby testnet: https://rinkeby.etherscan.io/address/0xaeA146dF743d10d42F90d8DdBCB79e0D7f0255a2
 
 ## Install dependencies
 
@@ -31,7 +31,7 @@ $ yarn hardhat accounts
 
 #### Deployment on testnet
 
-- Instead of importing a hardhat node account, you just need to set up an account in Metamask with Goerli testnet
+- Instead of importing a hardhat node account, you just need to set up an account in Metamask with Rinkeby testnet
 
 ### Step 3. Create `.env` file in `hardhat/` directory and set variables
 
@@ -39,8 +39,8 @@ $ yarn hardhat accounts
 
 ```bash
 # hardhat/.env
-ALCHEMY_API_KEY_URL=https://eth-goerli.alchemyapi.io/v2/<ALCHEMY_API_KEY>
-GOERLI_PRIVATE_KEY=<ACCOUNT_PRIVATE_KEY>
+ALCHEMY_API_KEY_URL=https://eth-rinkeby.alchemyapi.io/v2/<ALCHEMY_API_KEY>
+RINKEBY_PRIVATE_KEY=<ACCOUNT_PRIVATE_KEY>
 ```
 
 ### Step 4. Compile the smart contract and run the deployment script
@@ -60,7 +60,7 @@ $ yarn hardhat run scripts/deploy.js --network localhost
 #### Deployment on testnet
 
 ```bash
-$ yarn hardhat run scripts/deploy.js --network goerli
+$ yarn hardhat run scripts/deploy.js --network rinkeby
 ```
 
 ### Step 5. Set the contract address and abi in `app/constants/index.js`
