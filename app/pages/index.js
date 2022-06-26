@@ -180,7 +180,7 @@ export default function Home() {
       if (!presaleStarted && !presaleEnded) {
         return (
           <div>
-            <p className={styles.description}>Presale hasn't started!</p>
+            <p className={styles.description}>Presale hasn&apos;t started!</p>
           </div>
         );
       }
