@@ -1,6 +1,6 @@
 # NFT Collection - Hardhat
 
-> An instance of this contract has been deployed on Ethereum Goerli testnet: https://goerli.etherscan.io/address/0x19D9514cE27Df9EA634B68c226757DD5dE3ab0B8
+> An instance of this contract has been deployed on Ethereum Goerli testnet: https://goerli.etherscan.io/address/0xc6ca02265517cbA700966AE05c3fEFbDDb9c3919
 
 ## Install dependencies
 
